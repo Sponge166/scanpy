@@ -1,0 +1,45 @@
+{
+    "global": {
+        "core:datatype": "cf32_le",
+        "core:metadata_only": false,
+        "core:extensions": [
+            {
+              "name" : "ntia-core",
+              "version" : "v2.0.0",
+              "optional" : false
+            }, {
+              "name" : "ntia-sensor",
+              "version" : "v2.0.0",
+              "optional" : false
+            }
+        ],
+        "ntia-sensor:sensor" : {
+            "sensor_spec" : {
+                "id": 1
+            },
+            "antenna" : {
+                "antenna_spec" : {
+                    "id": "rx_1",
+                    "description": "antenna_str"
+                },
+                "gain" : 50
+            }
+        },
+        "core:sample_rate": 42000.0,
+        "core:version": "1.2.2"
+    },
+    "captures": [
+        {
+            "core:datetime": "2024-06-13T16:55:55.567468Z",
+            "core:frequency": 570000000.0,
+            "core:sample_start": 0
+        }
+    ],
+    "annotations": [
+        {
+            "core:sample_start" : 0,
+            "core:freq_lower_edge" : 569993750.0,
+            "core:freq_upper_edge" : 570006250.0
+        }
+    ]
+}
