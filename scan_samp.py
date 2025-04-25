@@ -4,6 +4,8 @@ from sklearn.mixture import GaussianMixture
 import scipy.sparse
 from heapq import nlargest
 from ADMM_spare_ortho_dic_encode import ADMM_spare_ortho_dic_encode
+import matplotlib.pyplot as plt
+import time
 
 def scan_samp(X, H, HatomInfo, Phi, threshold, rho, lambdaa, beta):
 
@@ -38,18 +40,17 @@ def scan_samp(X, H, HatomInfo, Phi, threshold, rho, lambdaa, beta):
 	temp = nlargest(int(p * beta + .5), np.ndenumerate(a), key=lambda x:x[1])
 	potFreqInd = [x[0][0] for x in temp] # x[0][0] because x is ((idx,), a[idx])
 	H = H.tocsr()[potFreqInd, :]
+	# print(potFreqInd)
 	HatomInfo = HatomInfo[potFreqInd, :]
-
 	Norm_H = scipy.sparse.linalg.norm(H.T, axis=0)
 	# Norm_H is 1xp (length of each freq atom)
 
 	pred = []
-	W_c = []
 	i = 1
 	while True:
 		mu_X = np.sum(X * Omega, axis=1) / np.sum(Omega, axis=1)
 		Z = (X - np.outer(mu_X, np.ones(X.shape[1]))) * Omega
-		A = scipy.sparse.csr_array(Z).dot(H.T).toarray()
+		A = Z.dot(H.T.toarray())
 		# Z is txf, H is pxf, so A is txp
 
 		cc = A / Norm_H
@@ -57,6 +58,8 @@ def scan_samp(X, H, HatomInfo, Phi, threshold, rho, lambdaa, beta):
 		# a is 1xp
 		m = np.argmax(a)
 		chosen_atom = H.tocsr()[m,:]
+		plt.plot(chosen_atom.toarray())
+		plt.show()
 		atom_start = HatomInfo[m,1]
 		atom_end = HatomInfo[m,2]
 		ident_f = list(range(atom_start, atom_end + 1))
@@ -70,7 +73,6 @@ def scan_samp(X, H, HatomInfo, Phi, threshold, rho, lambdaa, beta):
 		W, _ = ADMM_spare_ortho_dic_encode(y.T,Phi.T,lambdaa,rho);
 		W = W.T
 		# W is px1
-		W_c.append(W)
 
 		PhiW = Phi.dot(W)
 		#PhiW is tx1
@@ -84,6 +86,8 @@ def scan_samp(X, H, HatomInfo, Phi, threshold, rho, lambdaa, beta):
 
 		# building hole
 		ident_t = np.nonzero(np.ravel(cluster_labels == mean_idx, order="F"))[0]
+		plt.plot(cluster_labels == mean_idx)
+		plt.show()
 		ident_subs = np.zeros((len(ident_t)*len(ident_f),2))
 		offset = 0
 
