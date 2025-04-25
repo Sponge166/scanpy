@@ -1,3 +1,5 @@
 *.png
 multi_detections.txt
 precomputedH/*
+oldunused.py
+testdata/ota/*.csv
