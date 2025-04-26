@@ -24,7 +24,7 @@ def H_sparse_gen(t):
 
 	S = scipy.sparse.coo_array((oneVec, (iInds, jInds)))
 
-	return S, atomInfo
+	return S, np.array(atomInfo)
 
 
 
